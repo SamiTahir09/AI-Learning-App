@@ -25,4 +25,24 @@ export const errorHandler = (err, req, res, next) => {
     message = "File size exceeds the maximum limit of 10MB";
     statusCode = 400;
   }
+  //Jwt errors
+  if (err.name === "JsonwebTokenError") {
+    message = "Invalid Token";
+    statusCode = 401;
+  }
+  if (err.name === "TokenExpiredError") {
+    message = "Token Expired";
+    statusCode = 401;
+  }
+  console.error("Error:", {
+    message: err.message,
+    stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
+  });
+  res.status(statusCode).json({
+    success: false,
+    error: message,
+    statusCode,
+    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
+  });
 };
+export default errorHandler;

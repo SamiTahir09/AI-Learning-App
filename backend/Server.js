@@ -4,6 +4,8 @@ import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 import { errorHandler } from "./middleware/errorHandler.js";
+import connectDb from "./config/Db.js";
+import authRouter from "./routes/authRoute.js";
 
 //es6 module__dirname alternative
 const __filename = fileURLToPath(import.meta.url);
@@ -22,11 +24,14 @@ app.use(
     credentials: true,
   }),
 );
+//DataBase Connection
+connectDb();
 
 // static folder for uploads
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 //Routes
+app.use("api/auth", authRouter);
 app.use(errorHandler);
 
 //404 handler
