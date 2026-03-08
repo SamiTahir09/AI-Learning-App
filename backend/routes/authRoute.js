@@ -8,7 +8,7 @@ import {
   updateProfile,
   changePassword,
 } from "../controllers/authController.js";
-import { protect } from "../middleware/auth.js";
+import protect from "../middleware/auth.js";
 
 const authRouter = express.Router();
 
