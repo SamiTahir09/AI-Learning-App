@@ -36,10 +36,10 @@ const loginValidation = [
 
 // public routes
 authRouter.post("/register", registerValidation, register);
-authRouter.post("login", loginValidation, login);
+authRouter.post("/login", loginValidation, login);
 
 //protected routes
-authRouter.get("profile", protect, getProfile);
+authRouter.get("/profile", protect, getProfile);
 authRouter.put("/profile", protect, updateProfile);
 authRouter.post("/change-password", protect, changePassword);
 

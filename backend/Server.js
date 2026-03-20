@@ -31,18 +31,18 @@ connectDb();
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 //Routes
-app.use("api/auth", authRouter);
+app.use("/api/auth", authRouter);
 app.use(errorHandler);
 
 //404 handler
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    error: "Route not found",
-    statusCode: 404,
-  });
-});
+// app.use((req, res) => {
+//   res.status(404).json({
+//     success: false,
+//     error: "Route not found",
+//     statusCode: 404,
+//   });
+// });
 
-app.listen(3000, () => {
+app.listen(5001, () => {
   console.log("Server is runing");
 });
