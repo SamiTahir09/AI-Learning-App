@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import { errorHandler } from "./middleware/errorHandler.js";
 import connectDb from "./config/Db.js";
 import authRouter from "./routes/authRoute.js";
+import documentRouter from "./routes/documentroute.js";
 
 //es6 module__dirname alternative
 const __filename = fileURLToPath(import.meta.url);
@@ -32,16 +33,17 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 //Routes
 app.use("/api/auth", authRouter);
+app.use("/api/document", documentRouter);
 app.use(errorHandler);
 
 //404 handler
-// app.use((req, res) => {
-//   res.status(404).json({
-//     success: false,
-//     error: "Route not found",
-//     statusCode: 404,
-//   });
-// });
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    error: "Route not found",
+    statusCode: 404,
+  });
+});
 
 app.listen(5001, () => {
   console.log("Server is runing");
