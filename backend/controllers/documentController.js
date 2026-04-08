@@ -21,7 +21,37 @@ export const uploadDocument = async (req, res, next) => {
     }
     const { title } = req.body;
     if (!title) {
+      //delete uploaded file if title is missing
+      await fs.unlink(req.file.path);
+      return res.status(400).json({
+        success: false,
+        error: "Document Title is required",
+        statusCode: 400,
+      });
     }
+    // construct the url for the uploaded file
+    const baseUrl = `http://localhost:{process.env.PORT || 5001}`;
+    const fileUrl = `${baseUrl}/uploads/documents/${req.file.filename}`;
+
+    // create document record
+
+    const document = await Document.create({
+      userId: req.user._id,
+      title,
+      fileName: req.file.originalname,
+      filePath: fileUrl, // store the url instead of the local path
+      fileSize: req.file.size,
+      status: "processing",
+    });
+    //process PDF in background (in production,use a queue like bull or rabbitmq)
+    processPDF(document._id, req.file.path).catch((err) => {
+      console.error("Error processing PDF:", err);
+    });
+    res.status(201).json({
+      success: true,
+      data: document,
+      message: "Document uploaded successfully, processing in background",
+    });
   } catch (error) {
     //clean up file on error
     if (req.file) {
