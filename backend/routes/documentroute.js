@@ -13,7 +13,7 @@ import upload from "../config/multer.js";
 const documentRouter = express.Router();
 documentRouter.use(protect);
 
-documentRouter.post("/post", upload.single("file"), uploadDocument);
+documentRouter.post("/upload", upload.single("file"), uploadDocument);
 documentRouter.get("/", getDocuments);
 documentRouter.get("/:id", getDocument);
 documentRouter.delete("/:id", deleteDocument);
