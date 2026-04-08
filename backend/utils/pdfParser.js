@@ -1,5 +1,5 @@
 import fs from "fs/promises";
-import { PDFParse } from "pdf-parse";
+import { createRequire } from "module";
 
 /**
  *Extract text from PDF file
@@ -10,8 +10,13 @@ import { PDFParse } from "pdf-parse";
 export const extractTextFromPDF = async (filePath) => {
   try {
     const dataBuffer = await fs.readFile(filePath);
-    //pdf-parse = new PDFParse(new UnitArray ,not a Buffer)
+    // Node v20.15 misses process.getBuiltinModule, but pdfjs-dist expects it.
+    if (typeof process.getBuiltinModule !== "function") {
+      const require = createRequire(import.meta.url);
+      process.getBuiltinModule = (moduleName) => require(moduleName);
+    }
 
+    const { PDFParse } = await import("pdf-parse");
     const parser = new PDFParse(new Uint8Array(dataBuffer));
     const data = await parser.getText();
 
